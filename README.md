@@ -9,6 +9,8 @@ A physically based path tracer that runs in a GLSL fragment shader.
 
 * 为了方便配置，采用glfw+glad 取代 sdl2+gl3w。
 
+> mac 的动态库含有大文件，建议采用 'git lfs clone...'
+
 
 ![Mustang](./screenshots/Mustang.jpg)
 
