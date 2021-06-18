@@ -9,6 +9,18 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(ALL_LIBS
+        glfw
+        glad
+        )
+
+if (NOT WIN32)
+    set(ALL_LIBS
+            ${ALL_LIBS}
+            pthread
+            )
+endif()
+
 
 file(GLOB_RECURSE SHADERS
     ${CMAKE_SOURCE_DIR}/src/shaders/*.glsl
@@ -25,19 +37,26 @@ file(GLOB_RECURSE EXT_FILES
     ${CMAKE_SOURCE_DIR}/thirdparty/imgui/*.cpp
     ${CMAKE_SOURCE_DIR}/thirdparty/imguizmo/*.h
     ${CMAKE_SOURCE_DIR}/thirdparty/imguizmo/*.cpp  
-    ${CMAKE_SOURCE_DIR}/thirdparty/RadeonRays/*.h 
-    ${CMAKE_SOURCE_DIR}/thirdparty/RadeonRays/*.cpp     
-    ${CMAKE_SOURCE_DIR}/thirdparty/gl3w/GL/*.c
+    ${CMAKE_SOURCE_DIR}/thirdparty/RadeonRays/*.h
+    ${CMAKE_SOURCE_DIR}/thirdparty/RadeonRays/*.cpp
 	${CMAKE_SOURCE_DIR}/thirdparty/oidn/*.h
 	${CMAKE_SOURCE_DIR}/thirdparty/oidn/*.hpp
 	${CMAKE_SOURCE_DIR}/thirdparty/tinydir/*.h
+
 )
+
+
 
 set(SRCS ${SRC_FILES} ${EXT_FILES} ${SHADERS})
 
-set(SDL2_LIBRARIES "SDL2" "SDL2main")
-set(SDL2_INCLUDE_DIRS  ${CMAKE_SOURCE_DIR}/thirdparty/SDL2/include)
-set(SDL2_LIBDIR ${CMAKE_SOURCE_DIR}/thirdparty/SDL2/lib/x64)
+#set(SDL2_LIBRARIES "SDL2" "SDL2main")
+#set(SDL2_INCLUDE_DIRS  ${CMAKE_SOURCE_DIR}/thirdparty/SDL2/include)
+#if(WIN32)
+#    set(SDL2_LIBDIR ${CMAKE_SOURCE_DIR}/thirdparty/SDL2/lib/x64)
+#elseif(MACOSX)
+#    set(SDL2_LIBDIR ${CMAKE_SOURCE_DIR}/thirdparty/SDL2/lib)
+#endif()
+#set(SDL2_LIBDIR ${CMAKE_SOURCE_DIR}/thirdparty/SDL2/lib)
 set(OIDN_LIBRARIES "OpenImageDenoise")
 set(OIDN_LIBDIR ${CMAKE_SOURCE_DIR}/thirdparty/oidn/lib)
 
@@ -47,18 +66,20 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/tests
   ${CMAKE_SOURCE_DIR}/src/math
   ${CMAKE_SOURCE_DIR}/thirdparty/imgui
-  ${CMAKE_SOURCE_DIR}/thirdparty/glew/include
   ${CMAKE_SOURCE_DIR}/thirdparty/stb
-  ${CMAKE_SOURCE_DIR}/thirdparty/gl3w
+  ${CMAKE_SOURCE_DIR}/thirdparty/glfw/include/
   ${CMAKE_SOURCE_DIR}/thirdparty/imguizmo
   ${CMAKE_SOURCE_DIR}/thirdparty/RadeonRays
+        ${CMAKE_SOURCE_DIR}/thirdparty/glad/include/
   ${CMAKE_SOURCE_DIR}/thirdparty/tinydir
   ${CMAKE_SOURCE_DIR}/thirdparty/oidn/include
-  ${SDL2_INCLUDE_DIRS}
 )
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/glfw)
+add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/glad)
+
 link_directories(
-  ${SDL2_LIBDIR}
+#  ${SDL2_LIBDIR}
   ${OIDN_LIBDIR}
 )
 find_package(OpenGL)
@@ -94,9 +115,9 @@ SET(EXE_NAME "PathTracer")
 ADD_EXECUTABLE(${EXE_NAME} ${SRCS})
 
 if(WIN32)
-TARGET_LINK_LIBRARIES(${EXE_NAME} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${OIDN_LIBRARIES})
+TARGET_LINK_LIBRARIES(${EXE_NAME} ${OPENGL_LIBRARIES} ${ALL_LIBS} ${OIDN_LIBRARIES})
 else()
-TARGET_LINK_LIBRARIES(${EXE_NAME} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${OIDN_LIBRARIES} dl)
+TARGET_LINK_LIBRARIES(${EXE_NAME} ${OPENGL_LIBRARIES} ${ALL_LIBS} ${OIDN_LIBRARIES} dl)
 endif()
 
 #--------------------------------------------------------------------

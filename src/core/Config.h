@@ -24,7 +24,9 @@
 
 #pragma once
 
-#include <GL/gl3w.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN 1
