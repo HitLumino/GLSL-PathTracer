@@ -3,6 +3,13 @@ GLSL-PathTracer
 ==========
 A physically based path tracer that runs in a GLSL fragment shader.
 
+* 基于原作者代码上添加mac支持。
+
+* 添加oidn图像降噪库 mac 动态库。
+
+* 为了方便配置，采用glfw+glad 取代 sdl2+gl3w。
+
+
 ![Mustang](./screenshots/Mustang.jpg)
 
 ![Stormtrooper](./screenshots/stormtrooper.jpg)
